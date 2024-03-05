@@ -43,7 +43,7 @@ bool IsOpenFile(std::ifstream& input, const std::string& file)
 
 // использовать массивы array
 // дать другое имя функция обозначает действие
-bool WriteFromFile(std::ifstream& input, std::array<std::array<double, 3>, 3>& matrix)
+bool ReadFileStream(std::ifstream& input, std::array<std::array<double, 3>, 3>& matrix)
 {
 	if (input.bad())
 	{
@@ -71,7 +71,8 @@ bool WriteFromFile(std::ifstream& input, std::array<std::array<double, 3>, 3>& m
 // дать другое имя функции
 // не передавать в опционал функции если функции надо тока значение
 // написать функцию которая считывает одну матрицу
-bool CheckFileData(const std::string& fileName, Matrices& matrices)
+
+bool CheckFileData(const std::string& fileName, std::array<std::array<double, 3>, 3>& matrix)
 {
 	std::ifstream inputFile;
 	if (!IsOpenFile(inputFile, fileName))
@@ -79,12 +80,11 @@ bool CheckFileData(const std::string& fileName, Matrices& matrices)
 		std::cout << "Failed to open '" << fileName << "' file\n";
 		return false;
 	}
-	if (!WriteFromFile(inputFile, matrices.matrixOne))
+	if (!ReadFileStream(inputFile, matrix))
 	{
 		std::cout << "Failed to read in the '" << fileName << "' file\n";
 		return false;
 	}
-	inputFile.close();
 	return true;
 }
 
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	Matrices matrices;
-	if (!CheckFileData(args->fileOne, matrices) && !CheckFileData(args->fileTwo, matrices))
+	if (!CheckFileData(args->fileOne, matrices.matrixOne) || !CheckFileData(args->fileTwo, matrices.matrixTwo))
 	{
 		return 1;
 	}
