@@ -78,7 +78,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-bool isOpenFile(std::ifstream& input, std::ofstream& output, std::optional<Args>& args)
+bool IsOpenFile(std::ifstream& input, std::ofstream& output, std::optional<Args>& args)
 {
 	input.open(args->inputFile);
 	if (!input.is_open())
@@ -161,7 +161,7 @@ bool ProcessingOperatingMode(std::optional<Args> args)
 {
 	std::ifstream input;
 	std::ofstream output;
-	if (!isOpenFile(input, output, args))
+	if (!IsOpenFile(input, output, args))
 	{
 		std::cout << "Failed to open file\n";
 		return false;
