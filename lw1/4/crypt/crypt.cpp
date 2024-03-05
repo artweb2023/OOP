@@ -28,7 +28,7 @@ bool IsValidKey(int key)
 	return true;
 }
 
-bool IsCryptOrDecrypt(const std::string& crypt, Args& args)
+bool IsOperationMode(const std::string& crypt, Args& args)
 {
 	if (crypt == "crypt")
 	{
@@ -61,7 +61,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 			std::cout << "Usage: <key> 0-255\n";
 			return std::nullopt;
 		}
-		if (!IsCryptOrDecrypt(argv[1], args))
+		if (!IsOperationMode(argv[1], args))
 		{
 			std::cout << "Usage: crypt or decrypt\n";
 			return std::nullopt;
@@ -78,7 +78,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-bool ChecFile(std::ifstream& input, std::ofstream& output, std::optional<Args>& args)
+bool isOpenFile(std::ifstream& input, std::ofstream& output, std::optional<Args>& args)
 {
 	input.open(args->inputFile);
 	if (!input.is_open())
@@ -106,7 +106,7 @@ unsigned char SwapBits(unsigned char byte, Operation mode)
 	}
 }
 
-std::string OperationMode(const std::string& str, std::optional<Args> args)
+std::string SelectOperatingMode(const std::string& str, std::optional<Args> args)
 {
 	std::string encryptionStr;
 	for (unsigned char ch : str)
@@ -130,12 +130,12 @@ std::string OperationMode(const std::string& str, std::optional<Args> args)
 	return encryptionStr;
 }
 
-bool OperationCrypt(std::ifstream& input, std::ofstream& output, std::optional<Args> args)
+bool ReadAndWriteFromFileStream(std::ifstream& input, std::ofstream& output, std::optional<Args> args)
 {
 	std::string str;
 	while (getline(input, str))
 	{
-		str = OperationMode(str, args) + '\n';
+		str = SelectOperatingMode(str, args) + '\n';
 		if (!(output << str))
 		{
 			return false;
@@ -157,16 +157,16 @@ bool CheckFileData(std::ifstream& input, std::ofstream& output)
 	return true;
 }
 
-bool ProcesOperationEncryption(std::optional<Args> args)
+bool ProcessingOperatingMode(std::optional<Args> args)
 {
 	std::ifstream input;
 	std::ofstream output;
-	if (!ChecFile(input, output, args))
+	if (!isOpenFile(input, output, args))
 	{
 		std::cout << "Failed to open file\n";
 		return false;
 	}
-	if (!OperationCrypt(input, output, args))
+	if (!ReadAndWriteFromFileStream(input, output, args))
 	{
 		std::cout << "Failed to copy crypt or decrypt data\n";
 		return false;
@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-	if (!ProcesOperationEncryption(args))
+	if (!ProcessingOperatingMode(args))
 	{
 		return 1;
 	}
