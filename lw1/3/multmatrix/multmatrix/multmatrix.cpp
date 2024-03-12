@@ -16,13 +16,6 @@ struct Args
 //Использовать Matrix3x3 
 using Matrix3x3 = std::array<std::array<double, 3>, 3>;
 
-struct Matrices
-{
-	Matrix3x3 matrixOne;
-	Matrix3x3 matrixTwo;
-	Matrix3x3 result;
-};
-
 std::optional<Args> ParseArgs(int argc, char* argv[])
 {
 	if (argc != 3)
@@ -86,15 +79,16 @@ bool ReadMatrixFromFile(const std::string& fileName, Matrix3x3& matrix)
 // переименовать функции
 // лушче передавать каждую матрицу по отдельности
 // отдельно посчитать , отдельно вынести печатать
-void MultiplyMatrix(Matrices& matrices)
+Matrix3x3 MultiplyMatrix(Matrix3x3& matrixOne, Matrix3x3& matrixTwo, Matrix3x3& result)
 {
 	for (int row = 0; row < 3; row++) {
 		for (int col = 0; col < 3; col++) {
 			for (int inner = 0; inner < 3; inner++) {
-				matrices.result[row][col] += matrices.matrixOne[row][inner] * matrices.matrixTwo[inner][col];
+				result[row][col] += matrixOne[row][inner] * matrixTwo[inner][col];
 			}
 		}
 	}
+	return result;
 }
 
 void PrintMatrix(const Matrix3x3& matrices)
@@ -116,13 +110,14 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-	Matrices matrices;
-	if (!ReadMatrixFromFile(args->matrix1FileName, matrices.matrixOne) || !ReadMatrixFromFile(args->matrix2FileName, matrices.matrixTwo))
+	Matrix3x3 matrixOne;
+	Matrix3x3 matrixTwo;
+	if (!ReadMatrixFromFile(args->matrix1FileName, matrixOne) || !ReadMatrixFromFile(args->matrix2FileName, matrixTwo))
 	{
 		return 1;
 	}
-	MultiplyMatrix(matrices);
-	PrintMatrix(matrices.result);
+	Matrix3x3 result = { 0 };
+	PrintMatrix(MultiplyMatrix(matrixOne, matrixTwo, result));
 	return 0;
 }
 
