@@ -32,6 +32,8 @@ echo Check Encode and Dencode left boundary key
 fc input.txt "%TEMP%\output.txt">nul || goto err
 echo Test 4 passed
 
+REM Добавить тест где будет все 255 символов . Тест на бинарном файле.
+
 REM Тесты прошли успешно
 echo All tests passed successfully
 exit /B 0

@@ -77,7 +77,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	}
 	return args;
 }
-
+//переименовать функцию 
 bool IsOpenFile(std::ifstream& input, std::ofstream& output, std::optional<Args>& args)
 {
 	input.open(args->inputFile);
@@ -93,8 +93,10 @@ bool IsOpenFile(std::ifstream& input, std::ofstream& output, std::optional<Args>
 	return true;
 }
 
+// использовать двоичную систему
 unsigned char SwapBits(unsigned char byte, Operation mode)
 {
+	// разделить на две функции
 	switch (mode)
 	{
 	case Operation::Crypt:
@@ -105,7 +107,7 @@ unsigned char SwapBits(unsigned char byte, Operation mode)
 		return byte;
 	}
 }
-
+// нужно возращать байт а не строку
 std::string SelectOperatingMode(const std::string& str, std::optional<Args> args)
 {
 	std::string encryptionStr;
@@ -115,6 +117,7 @@ std::string SelectOperatingMode(const std::string& str, std::optional<Args> args
 		{
 		case Operation::Crypt:
 		{
+			// сделать разные функции для перемешивания битов
 			encryptionStr += SwapBits(ch ^ args->key, args->mode);
 			break;
 		}
@@ -130,8 +133,10 @@ std::string SelectOperatingMode(const std::string& str, std::optional<Args> args
 	return encryptionStr;
 }
 
+// слишком много аргументов , не надо передавать больше аргументов чем нужно. 
 bool ReadAndWriteFromFileStream(std::ifstream& input, std::ofstream& output, std::optional<Args> args)
 {
+	// читать по байтово
 	std::string str;
 	while (getline(input, str))
 	{
@@ -143,7 +148,7 @@ bool ReadAndWriteFromFileStream(std::ifstream& input, std::ofstream& output, std
 	}
 	return input.eof();
 }
-
+// переименовать или расмотреть нужна ли функция
 bool CheckFileData(std::ifstream& input, std::ofstream& output)
 {
 	if (input.bad())
@@ -157,8 +162,10 @@ bool CheckFileData(std::ifstream& input, std::ofstream& output)
 	return true;
 }
 
-bool ProcessingOperatingMode(std::optional<Args> args)
+// не передавать optional
+bool ProcessOperationMode(std::optional<Args> args)
 {
+	// файлы следует открывать прямо в этой функции
 	std::ifstream input;
 	std::ofstream output;
 	if (!IsOpenFile(input, output, args))
@@ -166,6 +173,7 @@ bool ProcessingOperatingMode(std::optional<Args> args)
 		std::cout << "Failed to open file\n";
 		return false;
 	}
+	// не совмещать вводы вывод
 	if (!ReadAndWriteFromFileStream(input, output, args))
 	{
 		std::cout << "Failed to copy crypt or decrypt data\n";
@@ -178,7 +186,7 @@ bool ProcessingOperatingMode(std::optional<Args> args)
 	}
 	return true;
 }
-
+//Добавить тест компресирование исполняемого файла
 int main(int argc, char* argv[])
 {
 	auto args = ParseArgs(argc, argv);
@@ -186,7 +194,7 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-	if (!ProcessingOperatingMode(args))
+	if (!ProcessOperationMode(args))
 	{
 		return 1;
 	}

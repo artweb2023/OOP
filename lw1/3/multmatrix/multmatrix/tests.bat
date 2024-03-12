@@ -29,8 +29,6 @@ echo Check correct data in file
 %MyProgram% matrix2.txt matrix3.txt nul && goto err
 echo Test 4 passed
 
-
-
 REM Тесты прошли успешно
 echo All tests passed successfully
 exit /B 0

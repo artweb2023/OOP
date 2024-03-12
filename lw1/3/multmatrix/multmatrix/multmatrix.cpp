@@ -5,16 +5,22 @@
 #include <optional>
 #include <string>
 
+
+// лушче назвать matrix1FileName
 struct Args
 {
-	std::string fileOne;
-	std::string fileTwo;
+	std::string matrix1FileName;
+	std::string matrix2FileName;
 };
+
+//Использовать Matrix3x3 
+using Matrix3x3 = std::array<std::array<double, 3>, 3>;
 
 struct Matrices
 {
-	std::array<std::array<double, 3>, 3> matrixOne;
-	std::array<std::array<double, 3>, 3> matrixTwo;
+	Matrix3x3 matrixOne;
+	Matrix3x3 matrixTwo;
+	Matrix3x3 result;
 };
 
 std::optional<Args> ParseArgs(int argc, char* argv[])
@@ -26,29 +32,17 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 		return std::nullopt;
 	}
 	Args args;
-	args.fileOne = argv[1];
-	args.fileTwo = argv[2];
+	args.matrix1FileName = argv[1];
+	args.matrix2FileName = argv[2];
 	return args;
 }
 
-bool IsOpenFile(std::ifstream& input, const std::string& file)
-{
-	input.open(file);
-	if (!input.is_open())
-	{
-		return false;
-	}
-	return true;
-}
-
+//Убрать функцию
 // использовать массивы array
 // дать другое имя функция обозначает действие
+// можно обойтись без него input.bad()
 bool ReadFileStream(std::ifstream& input, std::array<std::array<double, 3>, 3>& matrix)
 {
-	if (input.bad())
-	{
-		return false;
-	}
 	int count = 0;
 	for (int i = 0; i < 3; i++)
 	{
@@ -61,7 +55,7 @@ bool ReadFileStream(std::ifstream& input, std::array<std::array<double, 3>, 3>& 
 			count++;
 		}
 	}
-	if (count < 9)
+	if (count < 3 * 3)
 	{
 		return false;
 	}
@@ -70,12 +64,13 @@ bool ReadFileStream(std::ifstream& input, std::array<std::array<double, 3>, 3>& 
 
 // дать другое имя функции
 // не передавать в опционал функции если функции надо тока значение
-// написать функцию которая считывает одну матрицу
+// написать функцию которая считывает одну матрицу ReadMatrixFromFile
 
-bool CheckFileData(const std::string& fileName, std::array<std::array<double, 3>, 3>& matrix)
+bool ReadMatrixFromFile(const std::string& fileName, Matrix3x3& matrix)
 {
 	std::ifstream inputFile;
-	if (!IsOpenFile(inputFile, fileName))
+	inputFile.open(fileName);
+	if (!inputFile.is_open())
 	{
 		std::cout << "Failed to open '" << fileName << "' file\n";
 		return false;
@@ -89,15 +84,26 @@ bool CheckFileData(const std::string& fileName, std::array<std::array<double, 3>
 }
 
 // переименовать функции
-void PrintMultiplyMatrix(const Matrices& matrices)
+// лушче передавать каждую матрицу по отдельности
+// отдельно посчитать , отдельно вынести печатать
+void MultiplyMatrix(Matrices& matrices)
 {
-	double result[3][3] = { 0 };
 	for (int row = 0; row < 3; row++) {
 		for (int col = 0; col < 3; col++) {
 			for (int inner = 0; inner < 3; inner++) {
-				result[row][col] += matrices.matrixOne[row][inner] * matrices.matrixTwo[inner][col];
+				matrices.result[row][col] += matrices.matrixOne[row][inner] * matrices.matrixTwo[inner][col];
 			}
-			std::cout << std::fixed << std::setprecision(3) << result[row][col] << " ";
+		}
+	}
+}
+
+void PrintMatrix(const Matrix3x3& matrices)
+{
+	for (int row = 0; row < 3; row++)
+	{
+		for (int col = 0; col < 3; col++)
+		{
+			std::cout << std::fixed << std::setprecision(3) << matrices[row][col] << " ";
 		}
 		std::cout << "\n";
 	}
@@ -111,11 +117,12 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	Matrices matrices;
-	if (!CheckFileData(args->fileOne, matrices.matrixOne) || !CheckFileData(args->fileTwo, matrices.matrixTwo))
+	if (!ReadMatrixFromFile(args->matrix1FileName, matrices.matrixOne) || !ReadMatrixFromFile(args->matrix2FileName, matrices.matrixTwo))
 	{
 		return 1;
 	}
-	PrintMultiplyMatrix(matrices);
+	MultiplyMatrix(matrices);
+	PrintMatrix(matrices.result);
 	return 0;
 }
 
