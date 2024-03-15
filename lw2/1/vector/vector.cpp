@@ -1,7 +1,3 @@
-/*
-Каждый элемент массива должен быть умножен на минимальный элемент исходного массива Подсказка: используйте алгоритм std::min_element.
-*/
-
 #include "ProcessVector.h"
 
 int main()
@@ -10,13 +6,12 @@ int main()
 	{
 		auto numbers = GetVector(std::cin);
 		MultiplyOnMinimumVectorElement(numbers);
-		SortVector(numbers);
 		PrintVector(numbers);
 		return 0;
 	}
-	catch (const std::exception& exception)
+	catch (const std::exception& e)
 	{
-		std::cout << exception.what() << std::endl;
+		std::cout << e.what() << std::endl;
 		return 1;
 	}
 }
