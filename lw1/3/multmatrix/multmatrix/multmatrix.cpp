@@ -65,6 +65,7 @@ bool ReadMatrixFromFile(const std::string& fileName, Matrix3x3& matrix)
 	inputFile.open(fileName);
 	if (!inputFile.is_open())
 	{
+		// Сделать исключения и выводом не заниматься
 		std::cout << "Failed to open '" << fileName << "' file\n";
 		return false;
 	}
@@ -79,8 +80,10 @@ bool ReadMatrixFromFile(const std::string& fileName, Matrix3x3& matrix)
 // переименовать функции
 // лушче передавать каждую матрицу по отдельности
 // отдельно посчитать , отдельно вынести печатать
-Matrix3x3 MultiplyMatrix(Matrix3x3& matrixOne, Matrix3x3& matrixTwo, Matrix3x3& result)
+// result не надо принимать константные ссылки
+Matrix3x3 MultiplyMatrix(Matrix3x3& matrixOne, Matrix3x3& matrixTwo)
 {
+	Matrix3x3 result = { 0 };
 	for (int row = 0; row < 3; row++) {
 		for (int col = 0; col < 3; col++) {
 			for (int inner = 0; inner < 3; inner++) {
@@ -93,11 +96,13 @@ Matrix3x3 MultiplyMatrix(Matrix3x3& matrixOne, Matrix3x3& matrixTwo, Matrix3x3& 
 
 void PrintMatrix(const Matrix3x3& matrices)
 {
+	std::cout << std::fixed << std::setprecision(3);
 	for (int row = 0; row < 3; row++)
 	{
 		for (int col = 0; col < 3; col++)
 		{
-			std::cout << std::fixed << std::setprecision(3) << matrices[row][col] << " ";
+			// вызвать до вывода и вернуть как было после вывода (поток в прежденне состояние)
+			std::cout << matrices[row][col] << " ";
 		}
 		std::cout << "\n";
 	}
@@ -112,12 +117,12 @@ int main(int argc, char* argv[])
 	}
 	Matrix3x3 matrixOne;
 	Matrix3x3 matrixTwo;
-	if (!ReadMatrixFromFile(args->matrix1FileName, matrixOne) || !ReadMatrixFromFile(args->matrix2FileName, matrixTwo))
+	if (!ReadMatrixFromFile(args->matrix1FileName, matrixOne)
+		|| !ReadMatrixFromFile(args->matrix2FileName, matrixTwo))
 	{
 		return 1;
 	}
-	Matrix3x3 result = { 0 };
-	PrintMatrix(MultiplyMatrix(matrixOne, matrixTwo, result));
+	PrintMatrix(MultiplyMatrix(matrixOne, matrixTwo));
 	return 0;
 }
 

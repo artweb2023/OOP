@@ -6,6 +6,7 @@ int main()
 	{
 		auto numbers = GetVector(std::cin);
 		MultiplyOnMinimumVectorElement(numbers);
+		std::ranges::sort(numbers);
 		PrintVector(numbers);
 		return 0;
 	}

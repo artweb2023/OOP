@@ -28,8 +28,6 @@ void MultiplyOnMinimumVectorElement(std::vector<double>& numbers) {
 
 void PrintVector(std::vector<double>& numbers)
 {
-	//сделать через алгоритм copy и сделать через итератор
-	std::sort(numbers.begin(), numbers.end());
 	std::copy(numbers.begin(), numbers.end(),
 		std::ostream_iterator<double>(std::cout << std::fixed << std::setprecision(2), " "));
 	std::cout << '\n';

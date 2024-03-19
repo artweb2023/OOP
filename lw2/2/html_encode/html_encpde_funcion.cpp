@@ -1,22 +1,22 @@
 #include "html_encode.h"
 
-const std::map<char, std::string> mnemonics = {
-	{ '"', "&quot;" },
-	{ '\'', "&apos;" },
-	{ '<', "&lt;" },
-	{ '>', "&gt;"},
-	{ '&', "&amp;" },
-};
+//использовать array 
+const std::array<std::string, 5> mnemonics = { "\"&quot;","'&apos;", "<&lt;",">&gt;", "&&amp;" };
 
+// использовать range base
+// если использовать map то использовать метод find
 std::string HtmlEncode(const std::string& html)
 {
 	std::string result;
-	for (size_t position = 0; position < html.length(); ++position)
+	for (auto ch : html)
 	{
 		bool encoded = false;
-		for (const auto& [symbol, mnemonic] : mnemonics)
+		for (auto str : mnemonics)
 		{
-			if (html[position] == symbol)
+			char symbol = str[0];
+			size_t pos = str.find(symbol) + 1;
+			std::string_view mnemonic(&str[pos], str.length() - pos);
+			if (ch == symbol)
 			{
 				result.append(mnemonic);
 				encoded = true;
@@ -24,7 +24,9 @@ std::string HtmlEncode(const std::string& html)
 			}
 		}
 		if (!encoded)
-			result += html[position];
+		{
+			result.push_back(ch);
+		}
 	}
 	return result;
 }
