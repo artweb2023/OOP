@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include <optional>
+#include <stdexcept>
 #include <string>
 
 // лушче назвать matrix1FileName

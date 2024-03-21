@@ -2,7 +2,6 @@
 
 constexpr int maxUpperBound = 100000000;
 
-
 std::set<int> GeneratePrimeNumbersSet(const int upperBound)
 {
 	std::set<int> primeNumbers;
