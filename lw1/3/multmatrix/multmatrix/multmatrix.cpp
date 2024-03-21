@@ -5,7 +5,6 @@
 #include <optional>
 #include <string>
 
-
 // лушче назвать matrix1FileName
 struct Args
 {
@@ -66,13 +65,11 @@ bool ReadMatrixFromFile(const std::string& fileName, Matrix3x3& matrix)
 	if (!inputFile.is_open())
 	{
 		// Сделать исключения и выводом не заниматься
-		std::cout << "Failed to open '" << fileName << "' file\n";
-		return false;
+		throw std::runtime_error("Failed to open '" + fileName + "' file");
 	}
 	if (!ReadFileStream(inputFile, matrix))
 	{
-		std::cout << "Failed to read in the '" << fileName << "' file\n";
-		return false;
+		throw std::runtime_error("Failed to read from '" + fileName + "' file");
 	}
 	return true;
 }
@@ -110,19 +107,23 @@ void PrintMatrix(const Matrix3x3& matrices)
 
 int main(int argc, char* argv[])
 {
-	auto args = ParseArgs(argc, argv);
-	if (!args)
+	try
 	{
+		auto args = ParseArgs(argc, argv);
+		if (!args)
+		{
+			return 1;
+		}
+		Matrix3x3 matrixOne;
+		Matrix3x3 matrixTwo;
+		ReadMatrixFromFile(args->matrix1FileName, matrixOne);
+		ReadMatrixFromFile(args->matrix2FileName, matrixTwo);
+		PrintMatrix(MultiplyMatrix(matrixOne, matrixTwo));
+		return 0;
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << "Error: " << e.what() << std::endl;
 		return 1;
 	}
-	Matrix3x3 matrixOne;
-	Matrix3x3 matrixTwo;
-	if (!ReadMatrixFromFile(args->matrix1FileName, matrixOne)
-		|| !ReadMatrixFromFile(args->matrix2FileName, matrixTwo))
-	{
-		return 1;
-	}
-	PrintMatrix(MultiplyMatrix(matrixOne, matrixTwo));
-	return 0;
 }
-
