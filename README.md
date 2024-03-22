@@ -1,4 +1,4 @@
-# OOP labs
+# OOP
 # lw1
 # 1. Разработайте программу copyfile.exe, выполняющую копирование одного текстового файла в другой. Параметры командной строки:
 # copyfile.exe input file name output file name

@@ -32,6 +32,20 @@ echo Check Encode and Dencode left boundary key
 fc input.txt "%TEMP%\output.txt">nul || goto err
 echo Test 4 passed
 
+REM Проверка на шифрование и дешифрование bmp файла
+echo Check Encode and Dencode bmp file
+%MyProgram% crypt test.bmp "%TEMP%\test.crypt" 156 || goto err
+%MyProgram% decrypt "%TEMP%\test.crypt" "%TEMP%\test.bmp" 156 || goto err
+fc test.bmp "%TEMP%\test.bmp">nul || goto err
+echo Test 5 passed
+
+REM Проверка на шифрование и дешифрование exe файла
+echo Check Encode and Dencode exe file
+%MyProgram% crypt "D:\OOP\lw1\4\crypt\x64\Debug\crypt.exe" "%TEMP%\crypt.crypted" 12 || goto err
+%MyProgram% decrypt "%TEMP%\crypt.crypted" "%TEMP%\crypt1.exe" 12 || goto err
+fc "D:\OOP\lw1\4\crypt\x64\Debug\crypt.exe" "%TEMP%\crypt1.exe">nul || goto err
+echo Test 6 passed
+
 REM Добавить тест где будет все 255 символов . Тест на бинарном файле.
 
 REM Тесты прошли успешно

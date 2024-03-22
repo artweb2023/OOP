@@ -52,96 +52,89 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 		return std::nullopt;
 	}
 	Args args;
-	try
+	int key = std::stoi(argv[4]);
+	if (!IsValidKey(key))
 	{
-		int key = std::stoi(argv[4]);
-		if (!IsValidKey(key))
-		{
-			std::cout << "Invalid arguments key\n";
-			std::cout << "Usage: <key> 0-255\n";
-			return std::nullopt;
-		}
-		if (!IsOperationMode(argv[1], args))
-		{
-			std::cout << "Usage: crypt or decrypt\n";
-			return std::nullopt;
-		}
-		args.inputFile = argv[2];
-		args.outputFile = argv[3];
-		args.key = static_cast<uint8_t>(key);
-	}
-	catch (const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
+		std::cout << "Invalid arguments key\n";
+		std::cout << "Usage: <key> 0-255\n";
 		return std::nullopt;
 	}
+	if (!IsOperationMode(argv[1], args))
+	{
+		std::cout << "Usage: crypt or decrypt\n";
+		return std::nullopt;
+	}
+	args.inputFile = argv[2];
+	args.outputFile = argv[3];
+	args.key = static_cast<uint8_t>(key);
 	return args;
 }
+
 //переименовать функцию 
-bool IsOpenFile(std::ifstream& input, std::ofstream& output, std::optional<Args>& args)
+bool CheckFile(std::ifstream& input, std::ofstream& output)
 {
-	input.open(args->inputFile);
 	if (!input.is_open())
 	{
-		return false;
+		throw std::runtime_error("Failed to open input file");
 	}
-	output.open(args->outputFile);
 	if (!output.is_open())
+	{
+		throw std::runtime_error("Failed to open output file");
+	}
+	return true;
+}
+
+// использовать двоичную систему
+unsigned char EncryptSwapBits(unsigned char byte)
+{
+	return ((byte << 2) & 0b00011100) | ((byte >> 5) & 0b00000011)
+		| ((byte << 3) & 0b11000000) | ((byte >> 2) & 0b00100000);
+}
+
+unsigned char DecryptSwapBits(unsigned char byte)
+{
+	return ((byte & 0b00011100) >> 2) | ((byte & 0b00000011) << 5)
+		| ((byte & 0b11000000) >> 3) | ((byte & 0b00100000) << 2);
+}
+// нужно возращать байт а не строку
+// сделать разные функции для перемешивания битов
+unsigned SelectOperatingMode(char ch, const uint8_t key, Operation mode)
+{
+	unsigned char encryptionCh;
+	unsigned char decryptionCh;
+	switch (mode)
+	{
+	case Operation::Crypt:
+	{
+		return encryptionCh = EncryptSwapBits(ch ^ key);
+	}
+	case Operation::Decrypt:
+	{
+		return decryptionCh = DecryptSwapBits(ch) ^ key;
+	}
+	default:
+		return ch;
+	}
+}
+
+bool WriteInFileStream(unsigned char ch, std::ofstream& output)
+{
+	if (!output.put(ch))
 	{
 		return false;
 	}
 	return true;
 }
 
-// использовать двоичную систему
-unsigned char SwapBits(unsigned char byte, Operation mode)
-{
-	// разделить на две функции
-	switch (mode)
-	{
-	case Operation::Crypt:
-		return ((byte << 2) & 0x1C) | ((byte >> 5) & 0x03) | ((byte << 3) & 0xC0) | ((byte >> 2) & 0x20);
-	case Operation::Decrypt:
-		return ((byte & 0x1C) >> 2) | ((byte & 0x03) << 5) | ((byte & 0xC0) >> 3) | ((byte & 0x20) << 2);
-	default:
-		return byte;
-	}
-}
-// нужно возращать байт а не строку
-std::string SelectOperatingMode(const std::string& str, std::optional<Args> args)
-{
-	std::string encryptionStr;
-	for (unsigned char ch : str)
-	{
-		switch (args->mode)
-		{
-		case Operation::Crypt:
-		{
-			// сделать разные функции для перемешивания битов
-			encryptionStr += SwapBits(ch ^ args->key, args->mode);
-			break;
-		}
-		case Operation::Decrypt:
-		{
-			encryptionStr += SwapBits(ch, args->mode) ^ args->key;
-			break;
-		}
-		default:
-			break;
-		}
-	}
-	return encryptionStr;
-}
-
 // слишком много аргументов , не надо передавать больше аргументов чем нужно. 
-bool ReadAndWriteFromFileStream(std::ifstream& input, std::ofstream& output, std::optional<Args> args)
+bool ReadFromFileStream(std::ifstream& input, std::ofstream& output, Operation mode, const uint8_t key)
 {
 	// читать по байтово
-	std::string str;
-	while (getline(input, str))
+	char ch;
+	while (input.get(ch))
 	{
-		str = SelectOperatingMode(str, args) + '\n';
-		if (!(output << str))
+		ch = SelectOperatingMode(ch, key, mode);
+		if (!WriteInFileStream(ch, output))
 		{
 			return false;
 		}
@@ -163,39 +156,45 @@ bool CheckFileData(std::ifstream& input, std::ofstream& output)
 }
 
 // не передавать optional
-bool ProcessOperationMode(std::optional<Args> args)
+// файлы следует открывать прямо в этой функции
+	// не совмещать вводы вывод
+bool ProcessOperationMode(const std::string& inputFile, const std::string& outputFile,
+	Operation mode, const uint8_t key)
 {
-	// файлы следует открывать прямо в этой функции
 	std::ifstream input;
 	std::ofstream output;
-	if (!IsOpenFile(input, output, args))
+	input.open(inputFile, std::ios_base::binary);
+	output.open(outputFile, std::ios_base::binary);
+	CheckFile(input, output);
+	if (!ReadFromFileStream(input, output, mode, key))
 	{
-		std::cout << "Failed to open file\n";
-		return false;
-	}
-	// не совмещать вводы вывод
-	if (!ReadAndWriteFromFileStream(input, output, args))
-	{
-		std::cout << "Failed to copy crypt or decrypt data\n";
-		return false;
+		throw std::runtime_error("Failed to copy crypt or decrypt data");
 	}
 	if (!CheckFileData(input, output))
 	{
-		std::cout << "Failed to read or write data\n";
-		return false;
+		throw std::runtime_error("Failed to read or write data");
 	}
 	return true;
 }
+
 //Добавить тест компресирование исполняемого файла
 int main(int argc, char* argv[])
 {
-	auto args = ParseArgs(argc, argv);
-	if (!args)
+	try
 	{
-		return 1;
+		auto args = ParseArgs(argc, argv);
+		if (!args)
+		{
+			return 1;
+		}
+		if (!ProcessOperationMode(args->inputFile, args->outputFile, args->mode, args->key))
+		{
+			return 1;
+		}
 	}
-	if (!ProcessOperationMode(args))
+	catch (const std::exception& e)
 	{
+		std::cerr << "Error: " << e.what() << std::endl;
 		return 1;
 	}
 	return 0;
