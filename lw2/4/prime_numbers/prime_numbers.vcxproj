@@ -147,10 +147,12 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="parse_arg.cpp" />
     <ClCompile Include="prime_numbers.cpp" />
     <ClCompile Include="prime_number_funcion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ParseArgs.h" />
     <ClInclude Include="prime_number.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

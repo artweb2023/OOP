@@ -94,6 +94,7 @@ Matrix3x3 MultiplyMatrix(Matrix3x3& matrixOne, Matrix3x3& matrixTwo)
 
 void PrintMatrix(const Matrix3x3& matrices)
 {
+	auto defaultPrecision = std::cout.precision();
 	std::cout << std::fixed << std::setprecision(3);
 	for (int row = 0; row < 3; row++)
 	{
@@ -104,6 +105,7 @@ void PrintMatrix(const Matrix3x3& matrices)
 		}
 		std::cout << "\n";
 	}
+	std::cout << std::setprecision(defaultPrecision) << std::endl;
 }
 
 int main(int argc, char* argv[])

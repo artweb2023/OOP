@@ -1,23 +1,21 @@
 ﻿#include "/OOP/lw2/4/prime_numbers/prime_number.h"
 
-constexpr int maxUpperBound = 100000000;
+constexpr int firstPrimeNum = 2;
 
-std::set<int> GeneratePrimeNumbersSet(const int upperBound)
+// подумать как убысрить цикл
+std::set<int> GeneratePrimeNumbersSet(int upperBound)
 {
 	std::set<int> primeNumbers;
-	if (upperBound < 2)
+	if (upperBound < firstPrimeNum)
 	{
 		return primeNumbers;
 	}
-	primeNumbers.insert(2);
+	primeNumbers.insert(firstPrimeNum);
 	std::vector<bool> isPrime(upperBound + 1, true);
-	for (int i = 3; i <= upperBound; i += 2)
-	{
-		if (isPrime[i])
-		{
+	for (int i = 2; i <= upperBound; ++i) {
+		if (isPrime[i]) {
 			primeNumbers.insert(i);
-			for (int j = i + i; j <= upperBound; j += i)
-			{
+			for (int j = i * 2; j <= upperBound; j += i) {
 				isPrime[j] = false;
 			}
 		}
@@ -25,7 +23,7 @@ std::set<int> GeneratePrimeNumbersSet(const int upperBound)
 	return primeNumbers;
 }
 
-void PrintPrimeNumber(std::set<int> primeNumbersSet)
+void PrintPrimeNumber(const std::set<int>& primeNumbersSet)
 {
 	if (primeNumbersSet.empty())
 	{
@@ -38,29 +36,4 @@ void PrintPrimeNumber(std::set<int> primeNumbersSet)
 	std::cout << '\n';
 }
 
-std::optional<int> ParseArgs(int argc, char* argv[])
-{
-	int upperBound;
-	if (argc != 2)
-	{
-		std::cout << "Invalid arguments count\n";
-		std::cout << "Usage: prime_numbers.exe <number>" << std::endl;
-		return std::nullopt;
-	}
-	try
-	{
-		int number = std::stoi(argv[1]);
-		if (number < 0 || number > maxUpperBound)
-		{
-			std::cout << "The number out of range" << std::endl;
-			return std::nullopt;
-		}
-		upperBound = number;
-	}
-	catch (const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-		return std::nullopt;
-	}
-	return upperBound;
-}
+

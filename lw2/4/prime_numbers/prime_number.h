@@ -1,11 +1,10 @@
 #pragma once
 
 #include <iostream>
-#include <optional>
 #include <set>
-#include <string>
 #include <vector>
 
+// использовать заголовки только те которые используются в данном обявелнии 
+
 std::set<int> GeneratePrimeNumbersSet(const int upperBound);
-std::optional<int> ParseArgs(int argc, char* argv[]);
 void PrintPrimeNumber(std::set<int> primeNumbersSet);

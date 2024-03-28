@@ -1,8 +1,12 @@
 #define CATCH_CONFIG_MAIN
+#ifdef NDEBUG
+#endif
 
 #include "/OOP/catch2/catch.hpp"
+#include "/OOP/lw2/4/prime_numbers/ParseArgs.h"
 #include "/OOP/lw2/4/prime_numbers/prime_number.h"
 #include <boost/timer.hpp>
+
 
 SCENARIO("Check function ParseArgs")
 {
@@ -51,6 +55,8 @@ SCENARIO("Check function ParseArgs")
 		}
 	}
 }
+// добавить дерективу которая будет запускать данный тест только в релизе
+// добавить граничные кейсы для тестов!!
 
 SCENARIO("Testing the execution time of a function for a value of 100 million")
 {
@@ -84,7 +90,7 @@ SCENARIO("Testing the execution time of a function for a value of 100 million")
 	{
 		WHEN("GeneratePrimeNumbersSet is called")
 		{
-			std::set<int> primeNumbers = GeneratePrimeNumbersSet(10);
+			std::set<int> primeNumbers = GeneratePrimeNumbersSet(7);
 			THEN("Checking quantity ")
 			{
 				REQUIRE(primeNumbers.size() == 4);
@@ -92,6 +98,39 @@ SCENARIO("Testing the execution time of a function for a value of 100 million")
 				REQUIRE(primeNumbers.contains(3));
 				REQUIRE(primeNumbers.contains(5));
 				REQUIRE(primeNumbers.contains(7));
+			}
+		}
+	}
+	GIVEN("Testing a function for some border test")
+	{
+		WHEN("GeneratePrimeNumbersSet is called")
+		{
+			std::set<int> primeNumbers = GeneratePrimeNumbersSet(9);
+			THEN("Checking quantity ")
+			{
+				REQUIRE(primeNumbers.size() == 4);
+				REQUIRE(primeNumbers.contains(2));
+				REQUIRE(primeNumbers.contains(3));
+				REQUIRE(primeNumbers.contains(5));
+				REQUIRE(primeNumbers.contains(7));
+			}
+		}
+	}
+	GIVEN("Testing a function for some border test")
+	{
+		WHEN("GeneratePrimeNumbersSet is called")
+		{
+			std::set<int> primeNumbers = GeneratePrimeNumbersSet(18);
+			THEN("Checking quantity ")
+			{
+				REQUIRE(primeNumbers.size() == 7);
+				REQUIRE(primeNumbers.contains(2));
+				REQUIRE(primeNumbers.contains(3));
+				REQUIRE(primeNumbers.contains(5));
+				REQUIRE(primeNumbers.contains(7));
+				REQUIRE(primeNumbers.contains(11));
+				REQUIRE(primeNumbers.contains(13));
+				REQUIRE(primeNumbers.contains(17));
 			}
 		}
 	}

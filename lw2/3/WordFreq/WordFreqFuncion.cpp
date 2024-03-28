@@ -5,40 +5,26 @@ bool IsLetter(char ch)
 	return isalpha(ch);
 }
 
-std::string UpperToLower(std::string& word)
-{
+// использовать STL алгоритмы
+std::string UpperToLower(const std::string& word) {
 	std::string result;
-	for (auto ch : word)
-	{
-		if (!IsLetter(ch))
-		{
-			break;
-		}
-		else if (isupper(ch))
-		{
-			result += tolower(ch);
-		}
-		else
-		{
-			result += ch;
-		}
-	}
+	std::copy_if(word.begin(), word.end(), std::back_inserter(result), [](char ch) {
+		return IsLetter(ch);
+		});
+	std::transform(result.begin(), result.end(), result.begin(), [](char ch) {
+		return isupper(ch) ? tolower(ch) : ch;
+		});
 	return result;
 }
-
-WordFreq WordCounting(WordFreq& wordFreq, std::string& word)
+// не надо возвращать копию map
+void WordCounting(WordFreq& wordFreq, const std::string& str)
 {
-	word = UpperToLower(word);
-	auto it = wordFreq.find(word);
-	if (it != wordFreq.end() and !wordFreq.empty())
+	std::string word = UpperToLower(str);
+	if (!word.empty())
 	{
-		it->second++;
+		wordFreq[word] += 1;
 	}
-	else if (!word.empty())
-	{
-		wordFreq.insert(std::make_pair(word, 1));
-	}
-	return wordFreq;
+	// использовать [] , если слово не пустое тогда увеличить частоту
 }
 
 void ReadFromInputStream(std::istream& inputStream, WordFreq& wordFreq)
@@ -55,10 +41,11 @@ void ReadFromInputStream(std::istream& inputStream, WordFreq& wordFreq)
 	}
 }
 
+// улучшить читаемость
 void PrintWordFreq(const WordFreq& wordFreq)
 {
-	for (auto& wordInfo : wordFreq)
+	for (const auto& [word, freq] : wordFreq)
 	{
-		std::cout << wordInfo.first << ": " << wordInfo.second << std::endl;
+		std::cout << word << ": " << freq << std::endl;
 	}
 }

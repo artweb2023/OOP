@@ -143,10 +143,12 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\prime_numbers\parse_arg.cpp" />
     <ClCompile Include="..\prime_numbers\prime_number_funcion.cpp" />
     <ClCompile Include="prime_number_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\prime_numbers\ParseArgs.h" />
     <ClInclude Include="..\prime_numbers\prime_number.h" />
   </ItemGroup>
   <ItemGroup>

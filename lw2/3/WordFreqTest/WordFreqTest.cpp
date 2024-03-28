@@ -25,13 +25,9 @@ SCENARIO("Check wordFreq")
 		WHEN("ReadFromInputStream is called")
 		{
 			ReadFromInputStream(input, wordFreq);
-			THEN("Check size map")
-			{
-				REQUIRE(wordFreq.size() == 1);
-			}
 			THEN("Check correct add word and freq")
 			{
-				REQUIRE(wordFreq["hello"] == 3);
+				REQUIRE(wordFreq == WordFreq{ {"hello", 3} });
 			}
 		}
 	}
@@ -57,9 +53,7 @@ SCENARIO("Check wordFreq")
 			ReadFromInputStream(input, wordFreq);
 			THEN("Check if wordFreq contains correct frequencies")
 			{
-				REQUIRE(wordFreq.size() == 2);
-				REQUIRE(wordFreq["apple"] == 2);
-				REQUIRE(wordFreq["banana"] == 2);
+				REQUIRE(wordFreq == WordFreq{ {"apple", 2}, {"banana", 2} });
 			}
 		}
 	}
@@ -72,9 +66,7 @@ SCENARIO("Check wordFreq")
 			ReadFromInputStream(input, wordFreq);
 			THEN("Check if wordFreq does not contain special characters")
 			{
-				REQUIRE(wordFreq.size() == 2);
-				REQUIRE(wordFreq.find("apple") != wordFreq.end());
-				REQUIRE(wordFreq.find("banana") != wordFreq.end());
+				REQUIRE(wordFreq == WordFreq{ {"apple", 1}, {"banana", 1} });
 			}
 		}
 	}

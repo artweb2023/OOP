@@ -1,4 +1,5 @@
-#include "/OOP/lw2/4/prime_numbers/prime_number.h"
+#include "ParseArgs.h"
+#include "prime_number.h"
 
 int main(int argc, char* argv[])
 {

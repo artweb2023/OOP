@@ -21,9 +21,15 @@
     <ClCompile Include="..\prime_numbers\prime_number_funcion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\prime_numbers\parse_arg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\prime_numbers\prime_number.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\prime_numbers\ParseArgs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
