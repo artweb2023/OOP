@@ -71,7 +71,7 @@ bool Car::SetSpeed(int speed)
 	// сделать метод который бы возвращал опционал
 	if (auto range = IsInRange(m_gear))
 	{
-		auto [min, max] = *range;
+		auto [min, max] = range.value();
 		if (speed >= min && speed <= max)
 		{
 			m_speed = (m_gear == Car::Gear::Reverse) ? -speed : speed;

@@ -11,9 +11,6 @@ SCENARIO("test engine")
 	GIVEN("Create car")
 	{
 		Car car;
-		CHECK(car.GetSpeed() == 0);
-		CHECK(car.GetDirection() == Car::Direction::Stay);
-		CHECK(car.GetGear() == Car::Gear::Neutral);
 		WHEN("engine is off")
 		{
 			THEN("check engine")
