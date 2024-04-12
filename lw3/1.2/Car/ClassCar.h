@@ -3,7 +3,7 @@
 #include <array>
 // +передачу можно включать если двигатель включен
 // +скорость должна иметь абсолютное значение при движении назад
-// при движении задом на нейтрале не работает замедление
+// +при движении задом на нейтрале не работает замедление
 // +методы автомобиля не меняющие его состояния должны быть константные
 constexpr int maxSpeed = 150;
 constexpr int minSpeed = 0;
@@ -30,7 +30,7 @@ public:
 	bool TurnOnEngine();
 	bool TurnOffEngine();
 	bool SetGear(const Gear gear);
-	bool SetSpeed(const int speed);
+	bool SetSpeed(int speed);
 	bool IsTurnedOn() const;
 	Direction GetDirection() const;
 	int GetSpeed() const;

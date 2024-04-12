@@ -4,8 +4,7 @@
 #include "/OOP/lw3/1.2/Car/ClassCar.h"
 #include <iostream>
 
-
-//Перекомпоновать тесты
+//Перекомпоновать тесты , не нужно дублировать проверки
 
 SCENARIO("test engine")
 {
@@ -15,14 +14,14 @@ SCENARIO("test engine")
 		CHECK(car.GetSpeed() == 0);
 		CHECK(car.GetDirection() == Car::Direction::Stay);
 		CHECK(car.GetGear() == Car::Gear::Neutral);
-		WHEN("engine off")
+		WHEN("engine is off")
 		{
 			THEN("check engine")
 			{
 				REQUIRE(!car.IsTurnedOn());
 			}
 		}
-		WHEN("engine on")
+		WHEN("engine is on")
 		{
 			car.TurnOnEngine();
 			THEN("check engine")
@@ -38,17 +37,13 @@ SCENARIO("test neutral gear")
 	GIVEN("Create car")
 	{
 		Car car;
-		CHECK(car.GetSpeed() == 0);
-		CHECK(car.GetDirection() == Car::Direction::Stay);
-		CHECK(car.GetGear() == Car::Gear::Neutral);
-
-		WHEN("engine on")
+		WHEN("engine is on")
 		{
 			car.TurnOnEngine();
 			THEN("try set speed on neutral gear")
 			{
 				CHECK(car.SetSpeed(150) == false);
-				WHEN("speed > 0")
+				WHEN("the speed is above zero")
 				{
 					car.SetGear(Car::Gear::First);
 					car.SetSpeed(30);
@@ -56,6 +51,24 @@ SCENARIO("test neutral gear")
 					{
 						car.SetSpeed(20);
 						REQUIRE(car.GetSpeed() == 20);
+					}
+				}
+			}
+			THEN("set reverse gear")
+			{
+				car.SetGear(Car::Gear::Reverse);
+				WHEN("set speed is 20")
+				{
+					car.SetSpeed(20);
+					CHECK(car.GetDirection() == Car::Direction::Back);
+					THEN("set neutral gear")
+					{
+						car.SetGear(Car::Gear::Neutral);
+						AND_THEN("reduce speed")
+						{
+							car.SetSpeed(19);
+							REQUIRE(car.GetSpeed() == 19);
+						}
 					}
 				}
 			}
@@ -68,14 +81,10 @@ SCENARIO("test first gear")
 	GIVEN("Create car")
 	{
 		Car car;
-		// не нужно дублировать проверки
-		CHECK(car.GetSpeed() == 0);
-		CHECK(car.GetDirection() == Car::Direction::Stay);
-		CHECK(car.GetGear() == Car::Gear::Neutral);
-		WHEN("engine on")
+		WHEN("engine is on")
 		{
 			car.TurnOnEngine();
-			WHEN("first gear")
+			WHEN("first gear is selected")
 			{
 				car.SetGear(Car::Gear::First);
 				CHECK(car.GetGear() == Car::Gear::First);
@@ -109,13 +118,10 @@ SCENARIO("test second gear")
 	GIVEN("Create car")
 	{
 		Car car;
-		CHECK(car.GetSpeed() == 0);
-		CHECK(car.GetDirection() == Car::Direction::Stay);
-		CHECK(car.GetGear() == Car::Gear::Neutral);
-		WHEN("engine on")
+		WHEN("engine is on")
 		{
 			car.TurnOnEngine();
-			WHEN("second gear")
+			WHEN("second gear is selected")
 			{
 				car.SetGear(Car::Gear::First);
 				car.SetSpeed(30);
@@ -167,13 +173,10 @@ SCENARIO("test third gear")
 	GIVEN("Create car")
 	{
 		Car car;
-		CHECK(car.GetSpeed() == 0);
-		CHECK(car.GetDirection() == Car::Direction::Stay);
-		CHECK(car.GetGear() == Car::Gear::Neutral);
-		WHEN("engine on")
+		WHEN("engine is on")
 		{
 			car.TurnOnEngine();
-			WHEN("third gear")
+			WHEN("third gear is selected")
 			{
 				car.SetGear(Car::Gear::First);
 				car.SetSpeed(30);
@@ -222,13 +225,10 @@ SCENARIO("test fourth gear")
 	GIVEN("Create car")
 	{
 		Car car;
-		CHECK(car.GetSpeed() == 0);
-		CHECK(car.GetDirection() == Car::Direction::Stay);
-		CHECK(car.GetGear() == Car::Gear::Neutral);
-		WHEN("engine on")
+		WHEN("engine is on")
 		{
 			car.TurnOnEngine();
-			WHEN("fourth gear")
+			WHEN("fourth gear is selected")
 			{
 				car.SetGear(Car::Gear::First);
 				car.SetSpeed(30);
@@ -282,19 +282,15 @@ SCENARIO("test fourth gear")
 	}
 }
 
-
 SCENARIO("test fifth gear")
 {
 	GIVEN("Create car")
 	{
 		Car car;
-		CHECK(car.GetSpeed() == 0);
-		CHECK(car.GetDirection() == Car::Direction::Stay);
-		CHECK(car.GetGear() == Car::Gear::Neutral);
-		WHEN("engine on")
+		WHEN("engine is on")
 		{
 			car.TurnOnEngine();
-			WHEN("fifth gear")
+			WHEN("fifth gear is selected")
 			{
 				car.SetGear(Car::Gear::First);
 				car.SetSpeed(30);
@@ -344,16 +340,13 @@ SCENARIO("test reverse gear")
 	GIVEN("Create car")
 	{
 		Car car;
-		CHECK(car.GetSpeed() == 0);
-		CHECK(car.GetDirection() == Car::Direction::Stay);
-		CHECK(car.GetGear() == Car::Gear::Neutral);
-		WHEN("engine on")
+		WHEN("engine is on")
 		{
 			car.TurnOnEngine();
-			WHEN("first gear")
+			WHEN("first gear is selected")
 			{
 				car.SetGear(Car::Gear::First);
-				WHEN("speed 30")
+				WHEN("the speed is 30")
 				{
 					car.SetSpeed(30);
 					THEN("try set reverse gear")
@@ -361,14 +354,14 @@ SCENARIO("test reverse gear")
 						REQUIRE(!car.SetGear(Car::Gear::Reverse));
 					}
 				}
-				WHEN("speed 0")
+				WHEN("the speed is zero")
 				{
 					THEN("try set reverse gear")
 					{
 						REQUIRE(car.SetGear(Car::Gear::Reverse));
 					}
 				}
-				WHEN("speed 20")
+				WHEN("the speed is 20")
 				{
 					car.SetSpeed(20);
 					THEN("try set reverse gear")
@@ -396,13 +389,13 @@ SCENARIO("test direction")
 			{
 				REQUIRE(car.GetDirection() == Car::Direction::Stay);
 			}
-			WHEN("reverse gear")
+			WHEN("reverse gear is selected")
 			{
 				car.SetGear(Car::Gear::Reverse);
 				THEN("check direction")
 				{
 					REQUIRE(car.GetDirection() == Car::Direction::Stay);
-					WHEN("set speed 1")
+					WHEN("set speed one")
 					{
 						car.SetSpeed(1);
 						THEN("check direction")
@@ -412,7 +405,7 @@ SCENARIO("test direction")
 					}
 				}
 			}
-			WHEN("forward gear")
+			WHEN("forward gear is selected")
 			{
 				car.SetGear(Car::Gear::First);
 				THEN("check direction")

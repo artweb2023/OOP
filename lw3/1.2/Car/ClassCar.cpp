@@ -18,7 +18,7 @@ bool Car::TurnOffEngine()
 bool Car::SetGear(const Gear gear)
 {
 	// упростить метод
-	if (!m_isTurnOnEngine)
+	if (!m_isTurnOnEngine || (GetDirection() == Direction::Back && gear != Gear::Reverse))
 	{
 		return false;
 	}
@@ -26,10 +26,6 @@ bool Car::SetGear(const Gear gear)
 	{
 		m_gear = gear;
 		return true;
-	}
-	if (GetDirection() == Direction::Back && gear != Gear::Reverse)
-	{
-		return false;
 	}
 	auto it = std::find_if(m_gearRanges.begin(), m_gearRanges.end(),
 		[gear](const auto& pair) { return pair.first == gear; });
@@ -61,15 +57,12 @@ bool Car::SetGear(const Gear gear)
 }
 
 // метод должен принимать абсолютное значе
-bool Car::SetSpeed(const int speed)
+bool Car::SetSpeed(int speed)
 {
-	if (!m_isTurnOnEngine)
+	speed = std::abs(speed);
+	if (!m_isTurnOnEngine || (m_gear == Gear::Neutral && speed != minSpeed))
 	{
-		return false;
-	}
-	if (m_gear == Gear::Neutral && speed != minSpeed)
-	{
-		if (m_speed > speed && speed > minSpeed)
+		if (std::abs(m_speed) > speed && speed >= minSpeed)
 		{
 			m_speed = speed;
 			return true;
