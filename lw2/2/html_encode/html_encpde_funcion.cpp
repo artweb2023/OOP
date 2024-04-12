@@ -1,8 +1,15 @@
 #include "html_encode.h"
 
 //использовать array std::pair
-const std::array<std::pair<char, std::string>, 5> mnemonics = { { { '"', "&quot;" }, {'\'', "&apos;"},
-	{'<', "&lt;"}, {'>', "&gt;"}, {'&',"&amp;"} } };
+const std::array<std::pair<char, std::string>, 5> mnemonics{
+	{
+		{ '"', "&quot;" },
+		{'\'', "&apos;"},
+		{'<', "&lt;"},
+		{'>', "&gt;"},
+		{'&', "&amp;"}
+	}
+};
 
 // использовать range base
 // если использовать map то использовать метод find

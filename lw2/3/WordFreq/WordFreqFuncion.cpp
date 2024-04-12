@@ -8,11 +8,11 @@ bool IsLetter(char ch)
 // использовать STL алгоритмы
 std::string UpperToLower(const std::string& word) {
 	std::string result;
-	std::copy_if(word.begin(), word.end(), std::back_inserter(result), [](char ch) {
+	std::copy_if(word.begin(), word.end(), std::back_inserter(result), [](unsigned char ch) {
 		return IsLetter(ch);
 		});
-	std::transform(result.begin(), result.end(), result.begin(), [](char ch) {
-		return isupper(ch) ? tolower(ch) : ch;
+	std::transform(result.begin(), result.end(), result.begin(), [](unsigned char ch) {
+		return tolower(ch);
 		});
 	return result;
 }

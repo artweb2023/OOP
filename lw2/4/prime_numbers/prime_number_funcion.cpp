@@ -5,6 +5,8 @@ constexpr int firstPrimeNum = 2;
 // подумать как убысрить цикл
 std::set<int> GeneratePrimeNumbersSet(int upperBound)
 {
+	//повторить в каком порядке 
+	//время вставки и поиска удаления элементов
 	std::set<int> primeNumbers;
 	if (upperBound < firstPrimeNum)
 	{
@@ -12,10 +14,16 @@ std::set<int> GeneratePrimeNumbersSet(int upperBound)
 	}
 	primeNumbers.insert(firstPrimeNum);
 	std::vector<bool> isPrime(upperBound + 1, true);
-	for (int i = 2; i <= upperBound; ++i) {
-		if (isPrime[i]) {
+	//разделить циклы 
+	for (int i = 2; i <= upperBound; ++i)
+	{
+		if (isPrime[i])
+		{
+			//использовать метом insert с подсказкой
 			primeNumbers.insert(i);
-			for (int j = i * 2; j <= upperBound; j += i) {
+			// вырезать числа с квадратом , и с шагом 2
+			for (int j = i * 2; j <= upperBound; j += i)
+			{
 				isPrime[j] = false;
 			}
 		}

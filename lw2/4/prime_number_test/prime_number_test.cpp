@@ -1,6 +1,4 @@
 #define CATCH_CONFIG_MAIN
-#ifdef NDEBUG
-#endif
 
 #include "/OOP/catch2/catch.hpp"
 #include "/OOP/lw2/4/prime_numbers/ParseArgs.h"
@@ -57,9 +55,9 @@ SCENARIO("Check function ParseArgs")
 }
 // добавить дерективу которая будет запускать данный тест только в релизе
 // добавить граничные кейсы для тестов!!
-
 SCENARIO("Testing the execution time of a function for a value of 100 million")
 {
+#ifdef NDEBUG
 	GIVEN("Testing a function for maximum quantity and execution time")
 	{
 		WHEN("GeneratePrimeNumbersSet is called")
@@ -75,6 +73,7 @@ SCENARIO("Testing the execution time of a function for a value of 100 million")
 			}
 		}
 	}
+#endif
 	GIVEN("Testing a function for upperBound = 1")
 	{
 		WHEN("GeneratePrimeNumbersSet is called")
