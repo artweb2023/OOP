@@ -1,12 +1,19 @@
 #pragma once
 
 #include <array>
+#include <optional>
 // +передачу можно включать если двигатель включен
 // +скорость должна иметь абсолютное значение при движении назад
 // +при движении задом на нейтрале не работает замедление
 // +методы автомобиля не меняющие его состояния должны быть константные
 constexpr int maxSpeed = 150;
 constexpr int minSpeed = 0;
+
+struct SpeedRange
+{
+	int min;
+	int max;
+};
 
 class Car
 {
@@ -35,12 +42,8 @@ public:
 	Direction GetDirection() const;
 	int GetSpeed() const;
 	Gear GetGear() const;
+	std::optional<SpeedRange> IsInRange(Gear gear) const;
 private:
-	struct SpeedRange
-	{
-		int min;
-		int max;
-	};
 	using GearRanges = std::array<std::pair<Gear, SpeedRange>, 7>;
 	const static inline GearRanges m_gearRanges
 	{

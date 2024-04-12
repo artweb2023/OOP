@@ -15,6 +15,18 @@ bool Car::TurnOffEngine()
 	return false;
 }
 
+std::optional<SpeedRange> Car::IsInRange(Gear gear) const
+{
+	for (const auto& pair : m_gearRanges)
+	{
+		if (pair.first == gear)
+		{
+			return pair.second;
+		}
+	}
+	return std::nullopt;
+}
+
 bool Car::SetGear(const Gear gear)
 {
 	// упростить метод
@@ -27,32 +39,19 @@ bool Car::SetGear(const Gear gear)
 		m_gear = gear;
 		return true;
 	}
-	auto it = std::find_if(m_gearRanges.begin(), m_gearRanges.end(),
-		[gear](const auto& pair) { return pair.first == gear; });
-	if (it == m_gearRanges.end())
+	if (gear == Gear::Reverse && m_speed != 0)
 	{
 		return false;
 	}
-	auto [min, max] = it->second;
-	if (gear == Gear::Reverse)
+	if (auto range = IsInRange(gear))
 	{
-		if (m_speed == 0)
-		{
-			m_gear = gear;
-			return true;
-		}
-		return false;
-	}
-	else
-	{
+		auto [min, max] = range.value();
 		if (m_speed >= min && m_speed <= max)
 		{
 			m_gear = gear;
 			return true;
 		}
-		return false;
 	}
-
 	return false;
 }
 
@@ -70,22 +69,14 @@ bool Car::SetSpeed(int speed)
 		return false;
 	}
 	// сделать метод который бы возвращал опционал
-	auto it = std::find_if(m_gearRanges.begin(), m_gearRanges.end(),
-		[this](const auto& pair) { return pair.first == m_gear; });
-	if (it == m_gearRanges.end())
+	if (auto range = IsInRange(m_gear))
 	{
-		return false;
-	}
-	auto [min, max] = it->second;
-	if (speed >= min && speed <= max)
-	{
-		if (m_gear == Car::Gear::Reverse)
+		auto [min, max] = *range;
+		if (speed >= min && speed <= max)
 		{
-			m_speed = -speed;
+			m_speed = (m_gear == Car::Gear::Reverse) ? -speed : speed;
 			return true;
 		}
-		m_speed = speed;
-		return true;
 	}
 	return false;
 }
