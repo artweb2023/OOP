@@ -361,3 +361,14 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/lw4/Shapes/openal32.dll
+/lw4/Shapes/sfml-audio-2.dll
+/lw4/Shapes/sfml-audio-d-2.dll
+/lw4/Shapes/sfml-graphics-2.dll
+/lw4/Shapes/sfml-graphics-d-2.dll
+/lw4/Shapes/sfml-network-2.dll
+/lw4/Shapes/sfml-network-d-2.dll
+/lw4/Shapes/sfml-system-2.dll
+/lw4/Shapes/sfml-system-d-2.dll
+/lw4/Shapes/sfml-window-2.dll
+/lw4/Shapes/sfml-window-d-2.dll
