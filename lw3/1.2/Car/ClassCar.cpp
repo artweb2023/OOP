@@ -15,7 +15,7 @@ bool Car::TurnOffEngine()
 	return false;
 }
 
-std::optional<SpeedRange> Car::IsInRange(Gear gear) const
+const std::optional<SpeedRange> Car::FindSpeedRangeForGear(Gear gear)
 {
 	for (const auto& pair : m_gearRanges)
 	{
@@ -30,7 +30,7 @@ std::optional<SpeedRange> Car::IsInRange(Gear gear) const
 bool Car::SetGear(const Gear gear)
 {
 	// упростить метод
-	if (!m_isTurnOnEngine || (GetDirection() == Direction::Back && gear != Gear::Reverse))
+	if (!m_isTurnOnEngine)
 	{
 		return false;
 	}
@@ -39,26 +39,43 @@ bool Car::SetGear(const Gear gear)
 		m_gear = gear;
 		return true;
 	}
-	if (gear == Gear::Reverse && m_speed != 0)
+	if (GetDirection() == Direction::Back && gear != Gear::Reverse)
 	{
 		return false;
 	}
-	if (auto range = IsInRange(gear))
+	if (auto range = FindSpeedRangeForGear(gear))
 	{
 		auto [min, max] = range.value();
-		if (m_speed >= min && m_speed <= max)
+		if (gear == Gear::Reverse)
 		{
-			m_gear = gear;
-			return true;
+			if (m_speed == 0)
+			{
+				m_gear = gear;
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (m_speed >= min && m_speed <= max)
+			{
+				m_gear = gear;
+				return true;
+			}
+			return false;
 		}
 	}
 	return false;
 }
 
+
 // метод должен принимать абсолютное значе
 bool Car::SetSpeed(int speed)
 {
-	speed = std::abs(speed);
+	if (speed < 0)
+	{
+		return false;
+	}
 	if (!m_isTurnOnEngine || (m_gear == Gear::Neutral && speed != minSpeed))
 	{
 		if (std::abs(m_speed) > speed && speed >= minSpeed)
@@ -69,7 +86,7 @@ bool Car::SetSpeed(int speed)
 		return false;
 	}
 	// сделать метод который бы возвращал опционал
-	if (auto range = IsInRange(m_gear))
+	if (auto range = FindSpeedRangeForGear(m_gear))
 	{
 		auto [min, max] = range.value();
 		if (speed >= min && speed <= max)

@@ -29,6 +29,7 @@ SCENARIO("test engine")
 	}
 }
 
+// разбить на несколько WHEN
 SCENARIO("test neutral gear")
 {
 	GIVEN("Create car")
@@ -40,11 +41,11 @@ SCENARIO("test neutral gear")
 			THEN("try set speed on neutral gear")
 			{
 				CHECK(car.SetSpeed(150) == false);
-				WHEN("the speed is above zero")
+				AND_THEN("the speed is above zero")
 				{
 					car.SetGear(Car::Gear::First);
 					car.SetSpeed(30);
-					THEN("try decrease speed on first gear")
+					AND_THEN("try decrease speed on first gear")
 					{
 						car.SetSpeed(20);
 						REQUIRE(car.GetSpeed() == 20);
@@ -54,13 +55,13 @@ SCENARIO("test neutral gear")
 			THEN("set reverse gear")
 			{
 				car.SetGear(Car::Gear::Reverse);
-				WHEN("set speed is 20")
+				THEN("set speed is 20")
 				{
 					car.SetSpeed(20);
 					CHECK(car.GetDirection() == Car::Direction::Back);
-					THEN("set neutral gear")
+					AND_THEN("set neutral gear")
 					{
-						car.SetGear(Car::Gear::Neutral);
+						CHECK(car.SetGear(Car::Gear::Neutral));
 						AND_THEN("reduce speed")
 						{
 							car.SetSpeed(19);

@@ -9,6 +9,9 @@
 constexpr int maxSpeed = 150;
 constexpr int minSpeed = 0;
 
+// написать тест при движении задом на нейтрале
+// нельзя передавать скорость с отрицательным значением добавить тест
+// переназвать файлы Class
 struct SpeedRange
 {
 	int min;
@@ -42,10 +45,12 @@ public:
 	Direction GetDirection() const;
 	int GetSpeed() const;
 	Gear GetGear() const;
-	std::optional<SpeedRange> IsInRange(Gear gear) const;
+	// этот мето должен быть не таким и прочитать про статические поля сделать правильно
+	static std::optional<SpeedRange> const FindSpeedRangeForGear(Gear gear);
 private:
 	using GearRanges = std::array<std::pair<Gear, SpeedRange>, 7>;
-	const static inline GearRanges m_gearRanges
+	// прочитать про статические поля
+	static inline GearRanges m_gearRanges
 	{
 		{
 			{Gear::Reverse, {0, 20}},

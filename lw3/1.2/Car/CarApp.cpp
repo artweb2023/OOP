@@ -33,7 +33,7 @@ bool CarApp::HandleCommand()
 	return false;
 }
 
-bool CarApp::EngineOn(const int /*arg*/)
+bool CarApp::EngineOn(const int /*arg*/) const
 {
 	if (m_car.TurnOnEngine())
 	{
@@ -44,7 +44,7 @@ bool CarApp::EngineOn(const int /*arg*/)
 	return false;
 }
 
-bool CarApp::EngineOff(const int /*arg*/)
+bool CarApp::EngineOff(const int /*arg*/) const
 {
 	if (m_car.TurnOffEngine())
 	{
@@ -55,7 +55,7 @@ bool CarApp::EngineOff(const int /*arg*/)
 	return false;
 }
 
-bool CarApp::Info(const int /*arg*/)
+bool CarApp::Info(const int /*arg*/) const
 {
 	m_output << " State Engine is: " << (m_car.IsTurnedOn() ? "on" : "off") << std::endl;
 	m_output << " Speed is: " << m_car.GetSpeed() << std::endl;
@@ -64,7 +64,7 @@ bool CarApp::Info(const int /*arg*/)
 	return true;
 }
 
-int CarApp::ConvertGearToInt(const Car::Gear& gear)
+int CarApp::ConvertGearToInt(const Car::Gear& gear) const
 {
 	switch (gear)
 	{
@@ -78,7 +78,7 @@ int CarApp::ConvertGearToInt(const Car::Gear& gear)
 	}
 }
 
-Car::Gear CarApp::ConvertIntToGear(const int gear)
+Car::Gear CarApp::ConvertIntToGear(const int gear) const
 {
 	switch (gear)
 	{
@@ -92,7 +92,7 @@ Car::Gear CarApp::ConvertIntToGear(const int gear)
 	}
 }
 
-std::string CarApp::ConvertDirectionToString(const Car::Direction& d)
+std::string CarApp::ConvertDirectionToString(const Car::Direction& d) const
 {
 	switch (d)
 	{
@@ -102,7 +102,7 @@ std::string CarApp::ConvertDirectionToString(const Car::Direction& d)
 	}
 }
 
-bool CarApp::SetGear(const int arg)
+bool CarApp::SetGear(const int arg) const
 {
 	const Car::Gear gear = ConvertIntToGear(arg);
 	if (m_car.SetGear(gear))
@@ -114,7 +114,7 @@ bool CarApp::SetGear(const int arg)
 	return true;
 }
 
-bool CarApp::SetSpeed(const int arg)
+bool CarApp::SetSpeed(const int arg) const
 {
 	if (m_car.SetSpeed(arg))
 	{
