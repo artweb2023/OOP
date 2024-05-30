@@ -15,16 +15,19 @@ std::set<int> GeneratePrimeNumbersSet(int upperBound)
 	primeNumbers.insert(firstPrimeNum);
 	std::vector<bool> isPrime(upperBound + 1, true);
 	//разделить циклы 
-	for (int i = 2; i <= upperBound; ++i)
+	for (int i = 3; i <= upperBound; i += 2)
 	{
 		if (isPrime[i])
 		{
 			//использовать метом insert с подсказкой
-			primeNumbers.insert(i);
+			primeNumbers.insert(primeNumbers.end(), i);
 			// вырезать числа с квадратом , и с шагом 2
-			for (int j = i * 2; j <= upperBound; j += i)
+			if (i <= std::sqrt(upperBound))
 			{
-				isPrime[j] = false;
+				for (int j = i * 2; j <= upperBound; j += i)
+				{
+					isPrime[j] = false;
+				}
 			}
 		}
 	}

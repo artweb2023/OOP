@@ -14,7 +14,6 @@ public:
 	void FillPolygon(std::vector<CPoint> points, uint32_t fillColor) override;
 	void FillCircle(CPoint origin, double radius, uint32_t fillColor) override;
 	void DrawCircle(CPoint origin, double radius, uint32_t lineColor) override;
-	void ClearShapes();
 private:
-	std::vector<sf::Drawable*> m_shapes;
+	std::vector<std::unique_ptr<sf::Drawable>> m_shapes;
 };

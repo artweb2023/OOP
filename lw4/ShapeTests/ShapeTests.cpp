@@ -6,8 +6,10 @@
 #include "/OOP/lw4/Shapes/CLineSegment.h"
 #include "/OOP/lw4/Shapes/CPoint.h"
 #include "/OOP/lw4/Shapes/CRectangle.h"
+#include "/OOP/lw4/Shapes/ShapeCreator.h"
 #include "/OOP/lw4/Shapes/ÑTriangle.h"
 #include "fakeit.hpp"
+
 
 SCENARIO("test Points")
 {
@@ -214,6 +216,42 @@ SCENARIO("test Triangle")
 			{
 				std::string expectedString = "Triangle: (0.00, 0.00) (3.00, 0.00) (0.00, 4.00) area 6.00 perimeter 12.00 outline ff0000 fill ff00";
 				REQUIRE(triangle.ToString() == expectedString);
+			}
+		}
+	}
+}
+
+SCENARIO("Testing shape creator")
+{
+	GIVEN("Shape creator and some points")
+	{
+		ShapeCreator creator;
+		CPoint p1(10, 10);
+		CPoint p2(20, 20);
+		CPoint p3(30, 15);
+
+		CHECK(creator.GetShapes().empty());
+
+		WHEN("Creating shapes")
+		{
+			creator.CreateLine(p1, p2, 0xFF0000);
+			creator.CreateCircle(p1, 30, 0xFF0000, 0xFF0000);
+			creator.CreateRectangle(p1, 30, 15, 0xFF0000);
+			creator.CreateTriangle(p1, p2, p3, 0xFF0000, 0xFF0000);
+
+			THEN("All shapes are created")
+			{
+				CHECK(creator.GetShapes().size() == 4);
+			}
+
+			AND_WHEN("Deleting shapes")
+			{
+				creator.ClearShapes();
+
+				THEN("All shapes are deleted")
+				{
+					CHECK(creator.GetShapes().empty());
+				}
 			}
 		}
 	}

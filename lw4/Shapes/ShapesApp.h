@@ -60,7 +60,7 @@ public:
 	void PrintShapesInfo() const;
 	std::string GetMaxAreaShapeInfo() const;
 	std::string GetMinPerimeterShapeInfo() const;
-	std::vector<IShape*> GetShapes() const;
+	const std::vector<std::unique_ptr<IShape>>& GetShapes() const;
 	uint32_t ParseColorFromStream(std::istream& stream);
 	LineArgs ParseLineArgs(const std::string& string);
 	RectArgs ParseRectangleArgs(const std::string& string);
@@ -74,7 +74,7 @@ private:
 	using ActionMap = std::map<std::string, Handler>;
 	std::istream& m_input;
 	std::ostream& m_output;
-	ShapeCreator m_shapeCreator;
+	ShapeCreator& m_shapeCreator;
 	const ActionMap m_actionMap;
 	CCanvas& m_canvas;
 };

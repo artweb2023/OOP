@@ -6,6 +6,6 @@ class ICanvasDrawable
 {
 public:
 	// вы€снить дл€ чего нужен виртуальный диструктор
-	virtual ~ICanvasDrawable() {}
+	virtual ~ICanvasDrawable() = default;
 	virtual void Draw(ICanvas& canvas) const = 0;
 };

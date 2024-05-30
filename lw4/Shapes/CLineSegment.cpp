@@ -18,9 +18,14 @@ CPoint CLineSegment::GetEndPoint() const
 	return m_endPoint;
 }
 
-double CLineSegment::GetPerimeter() const
+double CLineSegment::GetLengthLine() const
 {
 	return sqrt(pow(m_startPoint.GetX() - m_endPoint.GetX(), 2) + pow(m_startPoint.GetY() - m_endPoint.GetY(), 2));
+}
+
+double CLineSegment::GetPerimeter() const
+{
+	return GetLengthLine();
 }
 
 double CLineSegment::GetArea() const

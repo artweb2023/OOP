@@ -64,9 +64,9 @@ void ShapesApp::CreateCircle(const std::string& args)
 
 void ShapesApp::PrintInfo() const
 {
-	std::vector<IShape*> shapes = m_shapeCreator.GetShapes();
+	const auto& shapes = m_shapeCreator.GetShapes();
 	m_output << "Shapes:" << std::endl;
-	for (auto shape : shapes)
+	for (const auto& shape : shapes)
 	{
 		m_output << shape->ToString() << std::endl;
 	}
@@ -74,19 +74,19 @@ void ShapesApp::PrintInfo() const
 
 std::string ShapesApp::GetMaxAreaShapeInfo() const
 {
-	std::vector<IShape*> shapes = m_shapeCreator.GetShapes();
+	const auto& shapes = m_shapeCreator.GetShapes();
 	auto maxAreaShape = std::max_element(shapes.begin(), shapes.end(),
-		[](const IShape* a, const IShape* b) {
-			return a->GetPerimeter() < b->GetPerimeter();
+		[](const std::unique_ptr<IShape>& a, const std::unique_ptr<IShape>& b) {
+			return a->GetArea() < b->GetArea();
 		});
 	return (*maxAreaShape)->ToString();
 }
 
 std::string ShapesApp::GetMinPerimeterShapeInfo() const
 {
-	std::vector<IShape*> shapes = m_shapeCreator.GetShapes();
+	const auto& shapes = m_shapeCreator.GetShapes();
 	auto maxAreaShape = std::min_element(shapes.begin(), shapes.end(),
-		[](const IShape* a, const IShape* b) {
+		[](const std::unique_ptr<IShape>& a, const std::unique_ptr<IShape>& b) {
 			return a->GetPerimeter() < b->GetPerimeter();
 		});
 
@@ -109,7 +109,7 @@ uint32_t ShapesApp::ParseColorFromStream(std::istream& stream)
 
 void ShapesApp::PrintShapesInfo() const
 {
-	std::vector<IShape*> shapes = m_shapeCreator.GetShapes();
+	const auto& shapes = m_shapeCreator.GetShapes();
 
 	if (shapes.empty())
 	{
@@ -203,18 +203,18 @@ CircleArgs ShapesApp::ParseCircleArgs(const std::string& string)
 	return args;
 }
 
-std::vector<IShape*> ShapesApp::GetShapes() const
+const std::vector<std::unique_ptr<IShape>>& ShapesApp::GetShapes() const
 {
 	return m_shapeCreator.GetShapes();
 }
 
 void ShapesApp::Draw() const
 {
-	std::vector<IShape*> shapes = m_shapeCreator.GetShapes();
+	const auto& shapes = m_shapeCreator.GetShapes();
 
-	for (auto shape : shapes)
+	for (const auto& shape : shapes)
 	{
-		shape->Draw();
+		shape->Draw(m_canvas);
 	}
 
 	m_canvas.Draw();
@@ -222,7 +222,7 @@ void ShapesApp::Draw() const
 
 void ShapesApp::ClearShapes()
 {
-	m_canvas.ClearShapes();
+	m_shapeCreator.ClearShapes();
 }
 
 

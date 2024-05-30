@@ -8,8 +8,9 @@ class CLineSegment :public IShape
 {
 public:
 	CLineSegment(CPoint startPoint, CPoint endPoint, uint32_t color = 0);
-	double GetPerimeter() const override;
+	double GetLengthLine() const;
 	double GetArea() const override;
+	double GetPerimeter() const override;
 	CPoint GetStartPoint() const;
 	CPoint GetEndPoint() const;
 	uint32_t GetOutlineColor() const override;
