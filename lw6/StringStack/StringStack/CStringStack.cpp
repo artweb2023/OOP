@@ -50,7 +50,6 @@ CStringStack& CStringStack::operator=(const CStringStack& other)
 	return *this;
 }
 
-// лучше сделать через конструктор перемещения
 CStringStack& CStringStack::operator=(CStringStack&& other) noexcept
 {
 	if (this != &other)

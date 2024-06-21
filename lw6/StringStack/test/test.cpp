@@ -124,7 +124,7 @@ SCENARIO("Testing CStringStack")
 			CStringStack stack1;
 			stack1.Push("one");
 			stack1 = stack1;
-			THEN("The moved-to stack should have the original elements and the original should be empty")
+			THEN("The stack should have the original elements")
 			{
 				REQUIRE(stack1.Top() == "one");
 				REQUIRE(stack1.GetSize() == 1);
